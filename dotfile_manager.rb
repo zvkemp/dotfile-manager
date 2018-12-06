@@ -15,10 +15,10 @@ roles: &roles
     username: zvkemp
     email: zvkemp@gmail.com
   tmux: {}
+  alacritty: {}
   # - nvim
   # - zsh
   # - prezto
-  # - alacritty
 variables: &variables
   git_username: zvkemp
   git_email: zvkemp@gmail.com
@@ -39,7 +39,6 @@ targets:
     roles:
       <<: *roles
       i3: {}
-      tmux:
     variables:
       clipboard: xclip
   solus:
