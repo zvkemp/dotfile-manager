@@ -1,0 +1,37 @@
+---
+path: .gitconfig
+---
+[user]
+    name = <%= username %>
+    email = <%= email %>
+[core]
+    autocrlf = false
+    safecrlf = false
+    editor = vim
+    excludesfile = ~/.gitignore_global
+[push]
+    default = current
+[alias]
+    co = checkout
+    ci = commit
+    st = status
+    # br = branch
+    # pm = push -u origin master
+    # pa = push -u origin --all
+    hist = log --pretty=format:\"%h %ad | %d  %s [%an]\" --graph --date=short
+    # type = cat-file -t
+    # dump = cat-file -p
+    lg = log --graph --all --pretty=format:'%Cred%h%Creset %C(cyan)%an%Creset - %C(cyan bold reverse)%d%Creset %s %Cgreen(%ci)%Creset' --abbrev-commit --date=raw
+[color]
+    ui = auto
+    showbranch = auto
+[color "branch"]
+    current = cyan black bold
+    local = yellow
+    remote = magenta
+[color "diff"]
+    meta       = yellow
+    frag       = magenta
+    old        = red reverse bold
+    new        = green reverse bold
+    whitespace = white reverse
