@@ -35,3 +35,13 @@ path: .gitconfig
     old        = red reverse bold
     new        = green reverse bold
     whitespace = white reverse
+
+<% manjaro do %>
+  # conditional comment (manjaro only)
+<% end %>
+<% if manjaro? %>
+  # conditional comment 2
+<% elsif mac? %>
+  # conditional comment mac
+<% end %>
+
