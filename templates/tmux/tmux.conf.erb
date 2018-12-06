@@ -71,24 +71,12 @@ bind l select-pane -R
 
 # enable system copy
 # set-option -s set-clipboard off
-<% manjaro do %>
-# bind-key -T copy-mode-vi MouseDragEnd1Pane send-keys -X copy-pipe-and-cancel "xclip -se c -i"
-# bind -T copy-mode-vi y send-keys -X copy-pipe-and-cancel 'xclip -in -selection clipboard'
-<% end %>
 
 # set-option -g mouse on
 # set-option -s set-clipboard on
-# bind-key -T copy-mode-vi MouseDragEnd1Pane send-keys -X copy-pipe-and-cancel "xclip -se c -i"
-
 set-window-option -g mode-keys vi
 
-<% if clipboard == 'xclip' %>
-bind -T copy-mode-vi MouseDragEnd1Pane send-keys -X copy-pipe-and-cancel "xclip -i -selection clipboard"
-<% elsif clipboard == 'xsel' %>
-bind -T copy-mode-vi MouseDragEnd1Pane send-keys -X copy-pipe-and-cancel "xsel -i --clipboard"
-<% elsif clipboard == 'pbcopy' %>
-  <% raise 'not implemented' %>
-<% end %>
+bind -T copy-mode-vi MouseDragEnd1Pane send-keys -X copy-pipe-and-cancel "<%= copy_command %>"
 
 
 # set -g @plugin 'tmux-plugins/tpm'
