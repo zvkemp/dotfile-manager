@@ -1,22 +1,12 @@
 ---
 path: .tmux.conf
 ---
-# Add truecolor support
-# set-option -ga terminal-overrides ",xterm-256color:Tc"
-# Default terminal is 256 colors
-# set -g default-terminal "xterm-256color"
 bind r source-file ~/.tmux.conf \; display "Reloaded!"
 set -g prefix C-b
 
 # Add truecolor support
-# Default terminal is 256 colors
-# set -g default-terminal "xterm-256color"
-
 set -g default-terminal "tmux-256color"
 set-option -ga terminal-overrides ",*-256color:Tc"
-
-# removed in 1.9
-# set -g default-path "$PWD"
 
 # keep current path when creating new windows or panes
 bind-key c new-window -c "#{pane_current_path}"
@@ -30,18 +20,11 @@ bind l select-pane -R
 
 set -g pane-border-fg blue
 set -g pane-active-border-fg yellow
-# set -g pane-active-border-fg yellow
-# set colors for the active window
-# START:activewindowstatuscolor
-# setw -g status-bg colour235
 setw -g window-status-current-fg black
 setw -g window-status-current-bg green
 setw -g window-status-format "#I:#W |"
 setw -g window-status-fg colour245
 setw -g window-status-current-format " ▶ #I:#W #P "
-# setw -g window-status-current-attr default
-# END:activewindowstatuscolor
-
 
 set -g mouse on
 set -g focus-events on
@@ -49,11 +32,6 @@ set -g focus-events on
 # Eliminate esc-delay in vim
 set -g escape-time 0
 
-set -g status-left "#{?client_prefix,#[bg=magenta]#[fg=white] tmux  #[default],}#[fg=colour159,bold]#[bg=colour240] #S       "
-set -g status-right "#[bg=colour240]#[fg=colour235] #(date -u +'UTC %H:%M') #[bg=colour244] %d %b %R "
-
-set -g status-left ""
-set -g status-right ""
 # removed in 1.9
 # set -g default-path "$PWD"
 
@@ -67,20 +45,11 @@ bind j select-pane -D
 bind k select-pane -U
 bind l select-pane -R
 
-# bind -n C-k send-keys -R \; clear-history
-
-# enable system copy
-# set-option -s set-clipboard off
-
-# set-option -g mouse on
-# set-option -s set-clipboard on
 set-window-option -g mode-keys vi
 
+# enable system copy
 bind -T copy-mode-vi MouseDragEnd1Pane send-keys -X copy-pipe-and-cancel "<%= copy_command %>"
+bind-key -T copy-mode-vi y send-keys -X copy-pipe-and-cancel "<%= copy_command %>"
+# set-option -s set-clipboard on
 
-
-# set -g @plugin 'tmux-plugins/tpm'
-# set -g @plugin 'tmux-plugins/tmux-yank'
-
-# source-file ${HOME}/.tmux-themepack/basic.tmuxtheme
 source-file ${HOME}/.tmux-themepack/powerline/default/yellow.tmuxtheme
