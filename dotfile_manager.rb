@@ -271,3 +271,7 @@ exit(0)
 # TODO: support cloning/updating git repos
 # TODO: support target classes/aliases e.g., manjaro (linux), mac (darwin),
 # TODO: cli wizard
+# TODO: add annotations versioning (i.e., current sha and previous sha)
+#   - add some boilerplate warnings 'this file is managed by a script', etc.
+#   - headers can drive rollbacks file-by-file
+# TODO: plugins (rbenv, vim, nvim, etc)
