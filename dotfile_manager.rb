@@ -2,9 +2,12 @@ require 'erb'
 require 'yaml'
 require 'bundler/inline'
 require 'open3'
+require 'fileutils'
 
 gemfile do
+  source 'https://rubygems.org'
   gem 'pry-byebug'
+  gem 'git'
 end
 
 require 'pry-byebug'
@@ -15,7 +18,12 @@ roles: &roles
   git:
     username: zvkemp
     email: zvkemp@gmail.com
-  tmux: {}
+  tmux:
+    repos:
+      - url: https://github.com/jimeh/tmux-themepack.git
+        path: .config/tmux-themepack
+        ref: 126150d
+
   alacritty: {}
   nvim: {}
   # - zsh
@@ -92,9 +100,12 @@ class Configurator
   end
 end
 
-default_hook = -> (template) { puts "> wrote #{template.mod}" }
+confirmation = -> (template) { puts "> wrote #{template.mod}" }
+clone_repos = -> (template) { template.clone_repos }
 
-AFTER_COMMIT_HOOKS = Hash.new { |h, k| h[k] = [default_hook] }
+default_hooks = [confirmation, clone_repos]
+
+AFTER_COMMIT_HOOKS = Hash.new { |h, k| h[k] = [].concat(default_hooks) }
 AFTER_COMMIT_HOOKS['nvim'] << -> (template) { `nvim -c PlugIns -c exit -c exit` }
 
 class Template
@@ -158,6 +169,56 @@ class Template
     AFTER_COMMIT_HOOKS[mod].reverse_each do |hook|
       hook.to_proc.call(self)
     end
+  end
+
+  def clone_repos
+    (config['roles'][@mod]['repos'] || []).each do |repo_config|
+      CloneRepo.new(repo_config, @mod, @target).checkout!
+    end
+  end
+end
+
+class CloneRepo
+  attr_reader :repo_config
+
+  def initialize(repo_config, mod, target)
+    @repo_config = repo_config
+    @mod = mod
+    @target = target
+  end
+
+  def url
+    repo_config.fetch('url')
+  end
+
+  def target_path
+    File.expand_path("~/#{repo_config.fetch('path')}")
+  end
+
+  def dir
+    File.expand_path("~/.config/dotfile_manager/repos/#{@mod}/#{@target}")
+  end
+
+  def ref
+    repo_config['sha'] || repo_config['ref'] || 'master'
+  end
+
+  def checkout!
+    target_path # make sure this exists
+    FileUtils.mkdir_p(dir)
+
+    name = url.split('/').last.sub(/\.git\Z/,'')
+
+    # FIXME: check if repo exists first
+    g = if File.exists?("#{dir}/#{name}/.git")
+      Git.open("#{dir}/#{name}").tap { |r| r.fetch }
+    else
+      Git.clone(url, name, path: dir)
+    end
+
+    g.checkout(ref)
+
+    FileUtils.ln_sf("#{dir}/#{name}", target_path)
   end
 end
 
