@@ -33,12 +33,13 @@ call plug#begin('~/.config/nvim/plugged')
 
   Plug 'sebastianmarkow/deoplete-rust'
     let g:deoplete#sources#rust#documentation_max_height=20
-    let g:deoplete#sources#rust#racer_binary='/Users/zach/.cargo/bin/racer'
-    let g:deoplete#sources#rust#rust_source_path='/Users/zach/.rustup/toolchains/nightly-x86_64-apple-darwin/lib/rustlib/src/rust/src'
-
+    let g:deoplete#sources#rust#racer_binary='$HOME/.cargo/bin/racer'
+    let g:racer_cmd = "$HOME/.cargo/bin/racer"
+    let g:racer_experimental_completer = 1
+    " FIXME:
+    let g:deoplete#sources#rust#rust_source_path='$HOME/.rustup/toolchains/nightly-x86_64-apple-darwin/lib/rustlib/src/rust/src'
 
   Plug 'sheerun/vim-polyglot'
-
   Plug 'neomake/neomake'
     " Run Neomake when I save any buffer
     augroup localneomake
@@ -73,14 +74,22 @@ call plug#begin('~/.config/nvim/plugged')
   Plug 'mattn/emmet-vim'
   Plug 'jalvesaq/vimcmdline'
   Plug 'kshenoy/vim-signature'
+  Plug 'AndrewRadev/splitjoin.vim'
+
   " Plug 'racer-rust/vim-racer', { 'for': 'rust' }
   Plug 'Shougo/neosnippet'
   Plug 'Shougo/neosnippet-snippets'
   " Plug 'terryma/vim-multiple-cursors'
-  Plug 'itchyny/lightline.vim'
   Plug 'lifepillar/vim-solarized8'
 
   Plug 'chriskempson/base16-vim'
+
+<%- if statusline == 'lightline' %>
+  Plug 'itchyny/lightline.vim'
+<% else %>
+  Plug 'vim-airline/vim-airline'
+  Plug 'vim-airline/vim-airline-themes'
+<% end %>
 
   " Plug 'autozimu/LanguageClient-neovim', {
   "   \ 'branch': 'next',
@@ -135,6 +144,7 @@ let g:gitgutter_sign_added = '>>'
 let g:gitgutter_sign_modified = '<>'
 let g:gitgutter_sign_modified_removed = '><'
 
+" strip trailing whitespace on save
 autocmd BufWritePre *.rb,*.rs,*.coffee,*.exs,*.ex,*.haml,*.js :%s/\s\+$//e
 
 au BufRead,BufNewFile *.arb setfiletype=ruby
@@ -143,8 +153,6 @@ au BufRead,BufNewFile *.arb setfiletype=ruby
 " set statusline+=%#Modified#
 " set statusline+=%{fugitive#statusline()}
 " set statusline+=%*
-
-map <C-n> :NERDTreeToggle<CR>
 
 " Use the_silver_searcher for Ack
 let g:ackprg = 'ag --nogroup --nocolor --column'
@@ -164,8 +172,6 @@ let g:jsx_ext_required = 0
 let g:vim_json_syntax_conceal = 0
 
 let g:ruby_indent_assignment_style = 'variable'
-" let g:airline_powerline_fonts = 1
-" let g:airline#extensions#wordcount#enabled = 0
 
 " Mapping selecting mappings
 " nmap <leader><tab> <plug>(fzf-maps-n)
@@ -183,6 +189,21 @@ imap <c-x><c-l> <plug>(fzf-complete-line)
 
 map <ESC><ESC> :w<CR>
 
+let g:fzf_colors =
+\ { 'fg':      ['fg', 'Normal'],
+  \ 'bg':      ['bg', 'Normal'],
+  \ 'hl':      ['fg', 'Comment'],
+  \ 'fg+':     ['fg', 'CursorLine', 'CursorColumn', 'Normal'],
+  \ 'bg+':     ['bg', 'CursorLine', 'CursorColumn'],
+  \ 'hl+':     ['fg', 'Statement'],
+  \ 'info':    ['fg', 'PreProc'],
+  \ 'border':  ['fg', 'Ignore'],
+  \ 'prompt':  ['fg', 'Conditional'],
+  \ 'pointer': ['fg', 'Exception'],
+  \ 'marker':  ['fg', 'Keyword'],
+  \ 'spinner': ['fg', 'Label'],
+  \ 'header':  ['fg', 'Comment'] }
+
 :highlight NeomakeErrorMsg ctermfg=227 ctermbg=237
 let g:neomake_warning_sign={'text': '⚠', 'texthl': 'NeomakeErrorMsg'}
 :highlight NeomakeError ctermfg=225 ctermbg=160
@@ -195,8 +216,6 @@ let cmdline_app['ruby']   = 'pry'
 set confirm " confirm when closing unsaved buffer (instead of E37 error)
 
 set hidden " see https://github.com/racer-rust/vim-racer
-let g:racer_cmd = "/Users/zach/.cargo/bin/racer"
-let g:racer_experimental_completer = 1
 
 " let g:LanguageClient_serverCommands = {
 "       \ 'rust': ['~/.cargo/bin/rustup', 'run', 'nightly', 'rls']
@@ -207,8 +226,9 @@ imap <C-y>     <Plug>(neosnippet_expand_or_jump)
 smap <C-y>     <Plug>(neosnippet_expand_or_jump)
 xmap <C-y>     <Plug>(neosnippet_expand_target)
 
-set noshowmode " lightline provides mode showing now
+set noshowmode " provided by lightline or airline
 
+<% if statusline == 'lightline' %>
 let g:lightline = {
       \ 'component_function': {
       \   'filename': 'LightLineFilename'
@@ -217,5 +237,12 @@ let g:lightline = {
 function! LightLineFilename()
   return expand('%') " use relative path
 endfunction
+<% else %>
+let g:airline_powerline_fonts = 1
+let g:airline_theme = 'solarized_flood'
+<% end %>
 
 set diffopt+=iwhite
+
+let g:netrw_liststyle = 3
+let b:commentary_format = '# %s'

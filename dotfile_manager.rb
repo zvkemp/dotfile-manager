@@ -25,7 +25,8 @@ roles: &roles
         ref: 126150d
 
   alacritty: {}
-  nvim: {}
+  nvim:
+    statusline: airline
   # - zsh
   # - prezto
 variables: &variables
