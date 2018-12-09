@@ -1,0 +1,8 @@
+---
+classes:
+  - linux
+exclude_roles:
+roles:
+  i3:
+variables:
+  clipboard: xclip

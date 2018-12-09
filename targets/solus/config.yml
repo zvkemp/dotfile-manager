@@ -1,0 +1,5 @@
+---
+classes:
+  - linux
+variables:
+  clipboard: xsel

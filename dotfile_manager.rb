@@ -32,40 +32,28 @@ roles: &roles
 variables: &variables
   git_username: zvkemp
   git_email: zvkemp@gmail.com
-targets:
-  mac:
-    exclude_roles: []
-    roles:
-      <<: *roles
-    variables:
-      clipboard: pbcopy
-    # add overrides like this:
-    git:
-      username: zvkemp
-  manjaro:
-    aliases:
-      - linux
-    exclude_roles: []
-    roles:
-      <<: *roles
-      i3: {}
-    variables:
-      clipboard: xclip
-  solus:
-    variables:
-      clipboard: xsel
-    roles:
-      <<: *roles
+targets: {}
 YAMLCONFIG
+
+Dir['targets/**/config.yml'].each do |path|
+  if (target = path.match(/targets\/(?<target>\w*)\/config\.yml/)[:target])
+    target_config = YAML.load_file(path)
+    target_config['roles'] = CONFIG['roles'].merge(target_config['roles'] || {})
+    CONFIG['targets'][target] = target_config
+  end
+end
+
+CONFIG.freeze
 
 # scripts:
   # install nvim plugins
   # nvim -c PlugIns -c exit -c exit
 class Configurator
-  def initialize(target, mods_to_load = [])
+  def initialize(target, mods_to_load = [], base_dir = nil)
     @target = target
     @config = CONFIG['targets'][target]
     @mods_to_load = mods_to_load
+    @base_dir = nil || File.expand_path('~')
 
     process_config
   end
@@ -353,6 +341,7 @@ p options
 p ARGV
 mods = ARGV
 target = options[:target]
+
 raise ArgumentError.new("target `#{target.inspect}` not available") unless target && CONFIG['targets'][target]
 
 c = Configurator.new(target, mods)

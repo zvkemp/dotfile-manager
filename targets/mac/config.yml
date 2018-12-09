@@ -1,0 +1,8 @@
+---
+mac:
+classes:
+  - darwin
+exclude_roles:
+roles:
+variables:
+  clipboard: pbcopy
