@@ -39,6 +39,7 @@ c.templates.each do |t|
   puts "commit? y/n"
   if $stdin.gets.chomp == 'y'
     Pathname.new(t.target_path).dirname.mkpath # same as mkdir -p
+    t.install_packages
     File.open(t.target_path, 'w') { |f| f << t.to_s }
     t.run_after_commit_hooks
   end

@@ -31,6 +31,10 @@ module DotfileManager
     def exclude_roles
       data['exclude_roles'] || []
     end
+
+    def packages
+      data['packages']
+    end
   end
 
   class Config
@@ -57,6 +61,10 @@ module DotfileManager
 
     def roles
       @roles ||= Set.new(flat_map { |c| c.roles } - flat_map { |c| c.exclude_roles })
+    end
+
+    def packages
+      Set.new(flat_map(&:packages))
     end
 
     private

@@ -60,6 +60,10 @@ class Configurator
 
   attr_reader :target, :mod, :config
 
+  def packages
+    config.packages
+  end
+
   def templates
     config['roles'].flat_map do |mod, _|
       next [] unless should_load?(mod)
@@ -360,9 +364,6 @@ end
 
 exit(0)
 
-# TODO: actually write files to target
-# TODO: run scripts (nvim plugins, etc)
-# TODO: support cloning/updating git repos
 # TODO: support target classes/aliases e.g., manjaro (linux), mac (darwin),
 # TODO: cli wizard
 # TODO: add annotations versioning (i.e., current sha and previous sha)

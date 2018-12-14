@@ -51,9 +51,9 @@ module DotfileManager
         ).result
       end
 
-      def render_variables
-        # maybe shouldn't smoosh them all together?
-        config['variables'].merge(config['roles'][@mod])
+      def install_packages
+        binding.pry
+        return unless false
       end
 
       def run_after_commit_hooks

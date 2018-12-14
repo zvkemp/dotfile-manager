@@ -10,6 +10,7 @@ roles: &roles
         ref: 126150d
   alacritty: {}
   nvim:
+    packages: [neovim]
     statusline: airline
     after_commit:
       - require: ~/.config/nvim/autoload/plug.vim
