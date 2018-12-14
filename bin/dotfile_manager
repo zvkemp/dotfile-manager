@@ -1,0 +1,60 @@
+#!/usr/bin/env ruby
+
+require 'bundler/setup'
+require 'dotfile_manager'
+require 'optparse'
+require 'fileutils'
+
+options = {}
+OptionParser.new do |opts|
+  opts.banner = "Usage: example.rb [options]"
+
+  opts.on("-t", "--target TARGET") do |t|
+    options[:target] = t
+  end
+
+  opts.on("-v", "--[no-]verbose", "Run verbosely") do |v|
+    options[:verbose] = v
+  end
+
+  opts.on("-d", "--diff", "print diff only") do |v|
+    options[:diff] = v
+  end
+end.parse!
+
+p options
+p ARGV
+mods = ARGV
+target = options[:target]
+
+# raise ArgumentError.new("target `#{target.inspect}` not available") unless target && CONFIG['targets'][target]
+
+c = DotfileManager::Configurator.new(target, mods)
+
+
+c.templates.each do |t|
+  # puts t.render
+  puts t.diff
+
+  puts "commit? y/n"
+  if $stdin.gets.chomp == 'y'
+    Pathname.new(t.target_path).dirname.mkpath # same as mkdir -p
+    File.open(t.target_path, 'w') { |f| f << t.to_s }
+    t.run_after_commit_hooks
+  end
+end
+
+exit(0)
+
+# TODO: actually write files to target
+# TODO: run scripts (nvim plugins, etc)
+# TODO: support cloning/updating git repos
+# TODO: support target classes/aliases e.g., manjaro (linux), mac (darwin),
+# TODO: cli wizard
+# TODO: add annotations versioning (i.e., current sha and previous sha)
+#   - add some boilerplate warnings 'this file is managed by a script', etc.
+#   - headers can drive rollbacks file-by-file
+# TODO: plugins (rbenv, vim, nvim, etc)
+# TODO: specs
+#
+# TODO: separate program from template/config repo (independent versioning)

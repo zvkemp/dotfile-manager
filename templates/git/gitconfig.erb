@@ -36,12 +36,12 @@ path: .gitconfig
     new        = green reverse bold
     whitespace = white reverse
 
-<% manjaro do %>
+<% target(:manjaro) do %>
   # conditional comment (manjaro only)
 <% end %>
-<% if manjaro? %>
+<% if target(:manjaro) %>
   # conditional comment 2
-<% elsif mac? %>
+<% elsif target(:mac) %>
   # conditional comment mac
 <% end %>
 

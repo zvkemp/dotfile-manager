@@ -1,0 +1,23 @@
+---
+roles: &roles
+  git:
+    username: zvkemp
+    email: zvkemp@gmail.com
+  tmux:
+    repos:
+      - url: https://github.com/jimeh/tmux-themepack.git
+        path: .config/tmux-themepack
+        ref: 126150d
+  alacritty: {}
+  nvim:
+    statusline: airline
+    after_commit:
+      - require: ~/.config/nvim/autoload/plug.vim
+        script: curl -fLo ~/.config/nvim/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+      - nvim -c PlugIns -c exit -c exit
+  # - zsh
+  # - prezto
+variables: &variables
+  git_username: zvkemp
+  git_email: zvkemp@gmail.com
+targets: {}

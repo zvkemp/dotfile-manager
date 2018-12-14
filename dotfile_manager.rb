@@ -235,7 +235,7 @@ module HasTarget
 end
 
 module TemplateHelpers
-  module Tmux
+  module CopyCommand
     def copy_command
       case clipboard
       when 'xclip'
@@ -249,7 +249,8 @@ module TemplateHelpers
   end
 
   HELPERS = Hash.new { |h, k| h[k] = [] }
-  HELPERS['tmux'] << Tmux
+  HELPERS['tmux'] << CopyCommand
+  HELPERS['nvim'] << CopyCommand
 end
 
 class RenderContext
