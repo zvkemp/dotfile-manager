@@ -52,7 +52,7 @@ module DotfileManager
       end
 
       def install_packages
-        binding.pry
+        # FIXME
         return unless false
       end
 

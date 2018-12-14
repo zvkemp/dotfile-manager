@@ -83,14 +83,13 @@ call plug#begin('~/.config/nvim/plugged')
   Plug 'lifepillar/vim-solarized8'
 
   Plug 'chriskempson/base16-vim'
-
-<%- if statusline == 'lightline' %>
+<% if statusline == 'lightline' %>
   Plug 'itchyny/lightline.vim'
 <% else %>
   Plug 'vim-airline/vim-airline'
   Plug 'vim-airline/vim-airline-themes'
 <% end %>
-
+  Plug 'shmargum/vim-sass-colors'
   " Plug 'autozimu/LanguageClient-neovim', {
   "   \ 'branch': 'next',
   "   \ 'do': 'bash install.sh',
@@ -138,7 +137,6 @@ noremap <C-C> :w !<%= copy_command %><CR><CR>
 
 exe 'syn keyword rubyKeyword let'
 
-
 let g:gitgutter_sign_removed = '<<'
 let g:gitgutter_sign_added = '>>'
 let g:gitgutter_sign_modified = '<>'
@@ -178,8 +176,8 @@ let g:ruby_indent_assignment_style = 'variable'
 " xmap <leader><tab> <plug>(fzf-maps-x)
 " omap <leader><tab> <plug>(fzf-maps-o)
 " export FZF_DEFAULT_COMMAND='ag -g ""'
-nnoremap <c-p> :FZF<cr>
-nnoremap <c-o> :Ag<cr>
+nnoremap <leader>p :FZF<cr>
+nnoremap <leader>o :Ag<cr>
 
 " Insert mode completion
 imap <c-x><c-w> <plug>(fzf-complete-word)
@@ -226,8 +224,7 @@ imap <C-y>     <Plug>(neosnippet_expand_or_jump)
 smap <C-y>     <Plug>(neosnippet_expand_or_jump)
 xmap <C-y>     <Plug>(neosnippet_expand_target)
 
-set noshowmode " provided by lightline or airline
-
+set noshowmode " provided by <%= statusline %>
 <% if statusline == 'lightline' %>
 let g:lightline = {
       \ 'component_function': {
@@ -246,3 +243,6 @@ set diffopt+=iwhite
 
 let g:netrw_liststyle = 3
 let b:commentary_format = '# %s'
+
+imap jk <Esc>
+nnoremap <leader>s :w<cr>

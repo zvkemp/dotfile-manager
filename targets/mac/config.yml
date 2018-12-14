@@ -4,5 +4,7 @@ classes:
   - darwin
 exclude_roles:
 roles:
+  nvim:
+    statusline: lightline
 variables:
   clipboard: pbcopy
